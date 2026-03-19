@@ -18,6 +18,10 @@ div#board {
 }
 
 div.cell {
+    margin: 0.2em;
+
     outline: 1px dashed black;
-    outline-offset: -0.2em;
+
+    text-align: center;
+    justify-items: center;
 }
