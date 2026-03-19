@@ -3,27 +3,30 @@ const Gameboard = (() => {
     return {cells}
 })()
 
-function CreatePlayer(name) {
-    return () => {
-        const greeting = `Hi ${name}!`
-        return {name, greeting}
-    }
+function Player(name) {
+    this.name = name
+    this.moves = []
 }
 
-const GameController = (() => {
-    let memory = []
+const gameController = (() => {
+    let playerOne = new Player('T')
+    let playerTwo = new Player('L')
+
+    let gameMemory = []
     for (let cell of Gameboard.cells) {
         cell.addEventListener('click', (event) => {
-            if (!memory.includes(event.target)) {
-                memory.push(event.target)
-                if (memory.length % 2 !== 0) {
-                    event.target.classList.add('player1')
+            if (!gameMemory.includes(event.target)) {
+                gameMemory.push(event.target)
+                if (gameMemory.length % 2 !== 0) {
+                    playerOne.moves.push(Number.parseInt(event.target.id))
                     event.target.style.backgroundColor = 'red'
                 } else {
-                    event.target.classList.add('player2')
+                    playerTwo.moves.push(Number.parseInt(event.target.id))
                     event.target.style.backgroundColor = 'blue'
                 }
             }
+            let oneSorted = playerOne.moves.toSorted()
+            let twoSorted = playerTwo.moves.toSorted()
         })
     }
 })()
