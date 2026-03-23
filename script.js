@@ -2,38 +2,38 @@ const gameboard = (() => {
     return document.querySelectorAll('.cell')
 })()
 
-function Player(name) {
-    this.name = name
-    this.moveHistory = []
-    this.addMove = move => this.moveHistory.push(move)
-    this.getMoves = () => {  // Return a sorted move history for easier win check
-          return this.moveHistory.toSorted()
-    }
+function createPlayer(name) {
+    const playerName = name
+    let moveHistory = []
+    const addMove = move => moveHistory.push(move)
+    const getMoves = () => moveHistory.toSorted()  // Sorted for easier win check
+    
+    return {playerName, addMove, getMoves}
 }
 
 const gameController = (() => {
     const gameboardCells = gameboard
     let players = []
-    let playerOne = undefined
-    let playerTwo = undefined
 
     // Create players
     const createPlayerButton = document.querySelector('.submit-player')
     createPlayerButton.addEventListener('click', () => {
-        let playerLabel = document.querySelector('.player label')
+        let playerLabel = document.querySelector('.player-input label')
         playerLabel.innerText = playerLabel.innerText.replace('1', '2')
         let nameInput = document.querySelector('input')
-        let player = new Player(nameInput.value)
+        let player = createPlayer(nameInput.value)
         players.push(player)
         nameInput.value = ''
-        
-        playerOne = players[0]
-        playerTwo = players[1]
+        nameInput.focus()
 
-        if (players.length === 2) {  // Disable inputs, enable board
-            playerLabel.hidden = true
-            nameInput.hidden = true
-            createPlayerButton.hidden = true
+        const playerOneInfo = document.querySelector('.player-one')
+        playerOneInfo.innerText = `P1: ${players[0].playerName}`
+
+        if (players.length === 2) {  // Update playeres onto screen, disable inputs, enable board
+            const playerTwoInfo = document.querySelector('.player-two')
+            playerTwoInfo.innerText = `P2: ${players[1].playerName}`
+            nameInput.disabled = true
+            createPlayerButton.disabled = true
             for (let cell of gameboardCells) {
                 cell.style.opacity = 1
             }            
@@ -60,25 +60,25 @@ const gameController = (() => {
                 if (!gameMemory.includes(event.target)) {
                     gameMemory.push(event.target)
                     if (gameMemory.length % 2 !== 0) {
-                        playerOne.addMove(Number.parseInt(event.target.id))
+                        players[0].addMove(Number.parseInt(event.target.id))
                         event.target.style.backgroundColor = 'red'
                     } else {
-                        playerTwo.addMove(Number.parseInt(event.target.id))
+                        players[1].addMove(Number.parseInt(event.target.id))
                         event.target.style.backgroundColor = 'blue'
                     }
                 }
 
                 if (gameMemory.length > 4) {  // One can only win with 3 markers
-                    let playerOneMoves = playerOne.getMoves()
-                    let playerTwoMoves = playerTwo.getMoves()
+                    let playerOneMoves = players[0].getMoves()
+                    let playerTwoMoves = players[1].getMoves()
                     
                     for (let line of winningLines) {
                         if (winCondition(playerOneMoves, line)) {
-                            result.innerText = 'Result: ' + `${playerOne.name} wins!`
+                            result.innerText = 'Result: ' + `${players[0].playerName} wins!`
                             gameOver = true
                         }
                         if (winCondition(playerTwoMoves, line)) {
-                            result.innerText = 'Result: ' + `${playerTwo.name} wins!`
+                            result.innerText = 'Result: ' + `${players[1].playerName} wins!`
                             gameOver = true
                         }
                     }
