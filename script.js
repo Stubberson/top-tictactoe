@@ -16,21 +16,20 @@ const gameController = (() => {
     let players = []
 
     // Create players
+    const playerLabel = document.querySelector('.player-input label')
+    const nameInput = document.querySelector('input')
     const createPlayerButton = document.querySelector('.submit-player')
+    const playerOneInfo = document.querySelector('.player-one')
+    const playerTwoInfo = document.querySelector('.player-two')
     createPlayerButton.addEventListener('click', () => {
-        let playerLabel = document.querySelector('.player-input label')
         playerLabel.innerText = playerLabel.innerText.replace('1', '2')
-        let nameInput = document.querySelector('input')
         let player = createPlayer(nameInput.value)
         players.push(player)
         nameInput.value = ''
         nameInput.focus()
-
-        const playerOneInfo = document.querySelector('.player-one')
         playerOneInfo.innerText = `P1: ${players[0].playerName}`
 
         if (players.length === 2) {  // Update playeres onto screen, disable inputs, enable board
-            const playerTwoInfo = document.querySelector('.player-two')
             playerTwoInfo.innerText = `P2: ${players[1].playerName}`
             nameInput.disabled = true
             createPlayerButton.disabled = true
@@ -76,19 +75,44 @@ const gameController = (() => {
                         if (winCondition(playerOneMoves, line)) {
                             result.innerText = 'Result: ' + `${players[0].playerName} wins!`
                             gameOver = true
+                            resetGame()
                         }
                         if (winCondition(playerTwoMoves, line)) {
                             result.innerText = 'Result: ' + `${players[1].playerName} wins!`
                             gameOver = true
+                            resetGame()
                         }
                     }
 
                     if (gameMemory.length === 9 && !gameOver) {  // Tie if no winner declared
                         result.innerText = 'Result: ' + 'Tie!'
                         gameOver = true
+                        resetGame()
                     }
                 }
             }
+        })
+    }
+    
+    const resetButton = document.querySelector('#reset')
+    function resetGame() {
+        resetButton.hidden = false
+        resetButton.addEventListener('click', () => {
+            players = []
+            gameMemory = []
+            gameOver = false
+            playerLabel.innerText = playerLabel.innerText.replace('2', '1')
+            nameInput.disabled = false
+            createPlayerButton.disabled = false
+            playerOneInfo.innerText = ''
+            playerTwoInfo.innerText = ''
+            result.innerText = ''
+
+            for (let cell of gameboardCells) {
+                cell.style.backgroundColor = ''
+                cell.style.opacity = 0.3
+            }
+            resetButton.hidden = true
         })
     }
 })()

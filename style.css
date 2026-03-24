@@ -54,3 +54,8 @@ div.cell {
 p.result {
     justify-self: center;
 }
+
+button#reset {
+    margin-left: 50%;
+    translate: -50%;
+}
