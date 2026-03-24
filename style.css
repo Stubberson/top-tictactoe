@@ -10,6 +10,10 @@ h1 {
     text-align: center;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 div.player-input {
     width: 240px;
 
@@ -49,6 +53,8 @@ div.cell {
 
     text-align: center;
     justify-items: center;
+
+    cursor: default;
 }
 
 p.result {

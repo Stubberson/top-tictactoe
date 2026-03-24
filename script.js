@@ -35,6 +35,7 @@ const gameController = (() => {
             createPlayerButton.disabled = true
             for (let cell of gameboardCells) {
                 cell.style.opacity = 1
+                cell.style.cursor = 'pointer'
             }            
         }
     })
@@ -43,11 +44,10 @@ const gameController = (() => {
     let gameMemory = []
     let gameOver = false
 
+    // To check win
     const winningLines = [[1,2,3], [4,5,6], [7,8,9],  // Rows
                           [1,4,7], [2,5,8], [3,6,9],  // Cols
                           [1,5,9], [3,5,7]]           // Diag
-
-    // Helper function to check win
     function winCondition(playerMoves, winningLine) {
         return winningLine.every(value => playerMoves.includes(value))
     }
@@ -111,6 +111,7 @@ const gameController = (() => {
             for (let cell of gameboardCells) {
                 cell.style.backgroundColor = ''
                 cell.style.opacity = 0.3
+                cell.style.cursor = 'default'
             }
             resetButton.hidden = true
         })
